@@ -3,6 +3,8 @@
 
 #[DESCRIPTION]
 
+A work in progress ML/NN program for analyzing reddit post titles. Did I mention it is a work in progress?
+
 #[TODO]
 
 1.) Guarantee clean 8+1 outputs from title analysis
