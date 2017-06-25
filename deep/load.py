@@ -10,8 +10,8 @@ dataset = numpy.loadtxt("../acquisition/test_output.csv", delimiter=",")
 
 #define input and output array
 
-input_values = dataset[:,0:8]
-output_values = dataset[:,8]
+X = dataset[:,0:8]
+Y = dataset[:,8]
 
 #create model
 
@@ -25,7 +25,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 
 #Fit the model
 
-model.fit(X, T, epocs=150, batch_size=10)
+model.fit(X, Y, epochs=150, batch_size=10)
 
 #Evaluate
 

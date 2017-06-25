@@ -32,8 +32,8 @@ def parseTitles(postList, cleanGarbage = True, returnAsWordArray = True):
 			post.title = post.title.replace('"', '')
 			post.title = post.title.replace("'", '')
 			post.title = post.title.replace(",", "")
-			post.title = post.title.replace("\u", "")
-			cleaned = filter(lambda p: not p in garbage, post.title.split()) if returnAsWordArray else post.title
+			#post.title = post.title.replace("\u", "")
+			cleaned = list(filter(lambda p: not p in garbage, post.title.split()) if returnAsWordArray else post.title)
 			titlesArray.append(cleaned)
 			titleToScoreArray.append(1.0 - (1.0 / math.log1p(post.score)))
 			counter+=1
@@ -44,7 +44,7 @@ def reduceTitles(titlesArray, limit = 8):
 	for title in titlesArray:
 
 		if len(title) >= 8:
-			reducedTitle = filter(lambda t: title.index(t) < 8 , title)
+			reducedTitle = list(filter(lambda t: title.index(t) < 8 , title))
 		else:
 			reducedTitle = title
 		reducedTitles.append(reducedTitle)
@@ -66,8 +66,8 @@ def generateCSV(reducedTitleArray, filename):
 				##	holder = holder + str(num)
 				##holder=int(holder)
 				##holder=str(holder)
-				holder=str(int.from_bytes(title[word].encode(), 'little'))
-				csvString = csvString + holder + ","
+				holder=int.from_bytes(str(title[word]).encode(), 'little')
+				csvString = csvString + str(holder) + ","
 
 			##wordsAsNumber = [ord(ch) for ch in title[len(title) - 1]]
 			##holder=""
@@ -75,8 +75,8 @@ def generateCSV(reducedTitleArray, filename):
 			##	holder = holder + str(num)
 			##holder=int(holder)
 			##holder=str(holder)
-			holder=str(int.from_bytes(title[len(title) - 1].encode, 'little'))
-			csvString = csvString + holder + "," + str(titleToScoreArray[counter]) + "\n"
+			holder=int.from_bytes(str(title[len(title) - 1]).encode(), 'little')
+			csvString = csvString + str(holder) + "," + str(titleToScoreArray[counter]) + "\n"
 			output.write(csvString)
 			counter+=1
 
