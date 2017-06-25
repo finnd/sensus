@@ -32,7 +32,6 @@ def parseTitles(postList, cleanGarbage = True, returnAsWordArray = True):
 			post.title = post.title.replace('"', '')
 			post.title = post.title.replace("'", '')
 			post.title = post.title.replace(",", "")
-			#post.title = post.title.replace("\u", "")
 			cleaned = list(filter(lambda p: not p in garbage, post.title.split()) if returnAsWordArray else post.title)
 			titlesArray.append(cleaned)
 			titleToScoreArray.append(1.0 - (1.0 / math.log1p(post.score)))
@@ -54,7 +53,17 @@ def reduceTitles(titlesArray, limit = 8):
 
 	return reducedTitles
 
- 
+def numericalHashFromWord(word):
+	INPUT_TYPE = str((type(word))).replace('<', '').replace('>', '').replace('class', '').replace("'", "").replace(' ', '')
+	print(INPUT_TYPE)
+	if INPUT_TYPE == 'int' or 'long':
+		return word
+
+	if INPUT_TYPE == 'str':
+		return "do string stuff"
+
+	raise TypeError("ERROR: numericalHashFromWord() only accepts str,int, or long as float")
+	
 
 def generateCSV(reducedTitleArray, filename):
 	with open(filename, 'w') as output:
@@ -78,10 +87,12 @@ def generateCSV(reducedTitleArray, filename):
 			counter+=1
 
 if __name__ == '__main__':
-	post_list = getPosts(client, 'news', 4)
-	title_list = parseTitles(post_list)
-	reduced_title_list = reduceTitles(title_list)
-	generateCSV(reduced_title_list, 'test_output.csv')
+	##post_list = getPosts(client, 'news', 4)
+	##title_list = parseTitles(post_list)
+	##reduced_title_list = reduceTitles(title_list)
+	##generateCSV(reduced_title_list, 'test_output.csv')
+	print(numericalHashFromWord('test'))
+	print(numericalHashFromWord(True))
 	
 
 	
