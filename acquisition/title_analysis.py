@@ -70,7 +70,8 @@ def generateCSV(reducedTitleArray, filename):
 				holder = float(holder) / (1000457.0) if holder != 0 else holder
 				csvString = csvString + str(holder) + ","
 
-			holder=int.from_bytes(str(title[len(title) - 1]).encode(), 'little')
+			holder = (float(int.from_bytes(str(title[len(title) - 1]).encode(), 'little')) / (1000457.0)) if (title[len(title) - 1] != "null") else 0
+	
 			csvString = csvString + str(holder) + "," + str(titleToScoreArray[counter]) + "\n"
 			output.write(csvString)
 			print(csvString)
