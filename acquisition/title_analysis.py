@@ -20,7 +20,7 @@ strippedTitleArray = []
 titleToScoreArray = []
 
 def getPosts(client, subreddit, limit=1000):
-	postList = client.subreddit(subreddit).hot(limit=limit)
+	postList = client.subreddit(subreddit).top(limit=limit)
 	return postList
 
 def parseTitles(postList, cleanGarbage = True, returnAsWordArray = True):
@@ -48,25 +48,25 @@ def reduceTitles(titlesArray, limit = 8):
 				reducedTitle.append(title[i])
 		else:
 			reducedTitle = title
-			reducedTitle.append("null")
+			for i in range(len(title),8):
+				reducedTitle.append("null")
 		reducedTitles.append(reducedTitle)
 
 	return reducedTitles
 
 def numericalHashFromWord(word):
 	INPUT_TYPE = str((type(word))).replace('<', '').replace('>', '').replace('class', '').replace("'", "").replace(' ', '')
-	print(INPUT_TYPE)
-	if INPUT_TYPE == 'int' or 'long':
+	if (INPUT_TYPE == "int") or (INPUT_TYPE == "float"):
 		return word
 
-	if INPUT_TYPE == 'str':
-		return "do string stuff"
+	if (INPUT_TYPE == "str"):
+		return float(int.from_bytes(word.encode(), 'little')) / (10001269.0)
 
 	raise TypeError("ERROR: numericalHashFromWord() only accepts str,int, or long as float")
 	
 
 def generateCSV(reducedTitleArray, filename):
-	with open(filename, 'w') as output:
+	with open(filename, 'a') as output:
 		counter = 0;
 		for title in reducedTitleArray:
 			csvString = ""
@@ -75,11 +75,10 @@ def generateCSV(reducedTitleArray, filename):
 				if word == "null":
 					holder = 0
 				else:
-					holder=int.from_bytes(str(title[word]).encode(), 'little')
-				holder = float(holder) / (1000457.0) if holder != 0 else holder
+					holder=numericalHashFromWord(title[word])
 				csvString = csvString + str(holder) + ","
 
-			holder = (float(int.from_bytes(str(title[len(title) - 1]).encode(), 'little')) / (1000457.0)) if (title[len(title) - 1] != "null") else 0
+			holder = numericalHashFromWord(title[len(title) -1]) if (title[len(title) - 1] != "null") else 0
 	
 			csvString = csvString + str(holder) + "," + str(titleToScoreArray[counter]) + "\n"
 			output.write(csvString)
@@ -87,12 +86,10 @@ def generateCSV(reducedTitleArray, filename):
 			counter+=1
 
 if __name__ == '__main__':
-	##post_list = getPosts(client, 'news', 4)
-	##title_list = parseTitles(post_list)
-	##reduced_title_list = reduceTitles(title_list)
-	##generateCSV(reduced_title_list, 'test_output.csv')
-	print(numericalHashFromWord('test'))
-	print(numericalHashFromWord(True))
+	post_list = getPosts(client, 'worldnews')
+	title_list = parseTitles(post_list)
+	reduced_title_list = reduceTitles(title_list)
+	generateCSV(reduced_title_list, 'test_output.csv')
 	
 
 	

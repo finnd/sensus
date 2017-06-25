@@ -1,2 +1,3 @@
 backend/
 *.sublime-*
+word2vec/
