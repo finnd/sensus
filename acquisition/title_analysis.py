@@ -44,9 +44,12 @@ def reduceTitles(titlesArray, limit = 8):
 	for title in titlesArray:
 
 		if len(title) >= 8:
-			reducedTitle = list(filter(lambda t: title.index(t) < 8 , title))
+			reducedTitle = []
+			for i in range(0,8):
+				reducedTitle.append(title[i])
 		else:
 			reducedTitle = title
+			reducedTitle.append("null")
 		reducedTitles.append(reducedTitle)
 
 	return reducedTitles
@@ -60,24 +63,17 @@ def generateCSV(reducedTitleArray, filename):
 			csvString = ""
 			print(title)
 			for word in range(0, len(title) - 1):
-				##wordsAsNumber = [ord(ch) for ch in title[word]]
-				##holder=""
-				##for num in wordsAsNumber:
-				##	holder = holder + str(num)
-				##holder=int(holder)
-				##holder=str(holder)
-				holder=int.from_bytes(str(title[word]).encode(), 'little')
+				if word == "null":
+					holder = 0
+				else:
+					holder=int.from_bytes(str(title[word]).encode(), 'little')
+				holder = float(holder) / (1000457.0) if holder != 0 else holder
 				csvString = csvString + str(holder) + ","
 
-			##wordsAsNumber = [ord(ch) for ch in title[len(title) - 1]]
-			##holder=""
-			##for num in wordsAsNumber:
-			##	holder = holder + str(num)
-			##holder=int(holder)
-			##holder=str(holder)
 			holder=int.from_bytes(str(title[len(title) - 1]).encode(), 'little')
 			csvString = csvString + str(holder) + "," + str(titleToScoreArray[counter]) + "\n"
 			output.write(csvString)
+			print(csvString)
 			counter+=1
 
 if __name__ == '__main__':
